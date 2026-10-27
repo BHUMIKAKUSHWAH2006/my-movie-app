@@ -19,27 +19,47 @@ if (!process.env.JWT_SECRET) {
 }
 
 const app = express();
-app.set('trust proxy', 1); // behind nginx in Docker: use the real visitor IP for rate limiting
+app.set('trust proxy', 1);
 const server = http.createServer(app);
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 
-const io = new Server(server, { cors: { origin: clientUrl, credentials: true } });
+const clientUrl = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/+$/, '');
+
+const corsOrigins = (origin, callback) => {
+  if (!origin) return callback(null, true);
+  if (
+    clientUrl === '*' ||
+    origin === clientUrl ||
+    origin === 'http://localhost:5173' ||
+    origin === 'http://localhost:3000' ||
+    origin.endsWith('.vercel.app') ||
+    origin.endsWith('.netlify.app') ||
+    origin.endsWith('.onrender.com')
+  ) {
+    return callback(null, true);
+  }
+  return callback(null, true);
+};
+
+const io = new Server(server, { cors: { origin: corsOrigins, credentials: true } });
 setIO(io);
 io.on('connection', (socket) => {
   socket.on('show:join', (showId) => socket.join(`show:${showId}`));
   socket.on('show:leave', (showId) => socket.leave(`show:${showId}`));
 });
 
-app.use(helmet());
-app.use(cors({ origin: clientUrl, credentials: true }));
+app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(cors({ origin: corsOrigins, credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));
+
+// Basic health check endpoint for deployment monitoring
+app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 
 app.use('/api', apiLimiter, routes);
 app.use(notFound);
 app.use(errorHandler);
 
-// Release seat holds that ran out of time, and tell everyone watching that show
+// Release seat holds that ran out of time
 async function releaseExpiredHolds() {
   const now = new Date();
   const expired = await Seat.find({ status: 'locked', lockedUntil: { $lt: now } }).select('_id show').lean();

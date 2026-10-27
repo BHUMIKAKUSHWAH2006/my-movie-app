@@ -9,7 +9,11 @@ import {
   generateDemoSeats,
 } from './mockData';
 
-const realApi = axios.create({ baseURL: '/api' });
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.VITE_BACKEND_URL ? `${import.meta.env.VITE_BACKEND_URL.replace(/\/+$/, '')}/api` : '/api');
+
+const realApi = axios.create({ baseURL: API_BASE });
 
 realApi.interceptors.request.use((cfg) => {
   const token = localStorage.getItem('imovies_token');
