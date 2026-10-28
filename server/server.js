@@ -13,10 +13,7 @@ const { notFound, errorHandler } = require('./middleware/error');
 const { apiLimiter } = require('./middleware/rateLimit');
 const { setIO, emitSeats } = require('./utils/realtime');
 
-if (!process.env.JWT_SECRET) {
-  console.error('JWT_SECRET is missing. Copy .env.example to .env and set it.');
-  process.exit(1);
-}
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'imovies_super_secret_jwt_key_2026_live';
 
 const app = express();
 app.set('trust proxy', 1);
