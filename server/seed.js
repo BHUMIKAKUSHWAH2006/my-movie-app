@@ -1,9 +1,4 @@
 // Sets up the database. Safe to run on every start: it only adds what is missing.
-//   npm run seed         creates accounts and theatres, loads movies if there are none, and tops up shows
-//   npm run seed:reset   wipes everything first
-//
-// Movies: with TMDB_API_KEY set in .env you get real movies and posters from TMDB.
-// Without a key, fictional placeholder movies are added so the site still works.
 require('dotenv').config();
 const mongoose = require('mongoose');
 const connectDB = require('./config/db');
@@ -39,7 +34,7 @@ async function run() {
   // Accounts
   const accounts = [
     { name: 'IMovies Admin', email: 'admin@imovies.com', password: 'Admin@123', role: 'admin' },
-    { name: 'Demo User', email: 'user@imovies.com', password: 'User@123', role: 'user' },
+    { name: 'Bhumika Kushwah', email: 'bhumika@imovies.com', password: 'User@123', role: 'user' },
   ];
   for (const a of accounts) {
     if (!(await User.findOne({ email: a.email }))) await User.create(a);
@@ -77,11 +72,11 @@ async function run() {
           releaseDate: new Date(Date.now() - daysAgo * 86400000),
         }))
       );
-      console.log('Added placeholder movies. For real movies and posters, add TMDB_API_KEY to server/.env and run: npm run import:movies');
+      console.log('Added placeholder movies.');
     }
   }
 
-  // Shows: build a fresh week if there are none, or if the schedule is about to run out
+  // Shows
   const last = await Show.findOne().sort({ startTime: -1 }).select('startTime').lean();
   if (!last || last.startTime < new Date(Date.now() + 2 * 86400000)) {
     const n = await refreshShows();
@@ -89,7 +84,7 @@ async function run() {
   }
 
   console.log('Admin: admin@imovies.com / Admin@123');
-  console.log('User:  user@imovies.com  / User@123');
+  console.log('User:  bhumika@imovies.com / User@123');
   await mongoose.disconnect();
 }
 

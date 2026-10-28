@@ -31,7 +31,7 @@ export default function Checkout() {
   const [left, setLeft] = useState(null);
   const [method, setMethod] = useState('upi');
   const [card, setCard] = useState({ number: '', name: '', expiry: '', cvv: '' });
-  const [upi, setUpi] = useState('user@okaxis');
+  const [upi, setUpi] = useState('');
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState('');
   const [fieldErr, setFieldErr] = useState('');
@@ -251,7 +251,7 @@ export default function Checkout() {
                     id="nm"
                     className="form-control"
                     autoComplete="cc-name"
-                    placeholder="e.g. Rajesh Kumar"
+                    placeholder="e.g. Bhumika Kushwah"
                     value={card.name}
                     onChange={(e) => setCard({ ...card, name: e.target.value })}
                   />

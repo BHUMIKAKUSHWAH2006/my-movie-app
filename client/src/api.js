@@ -293,7 +293,7 @@ async function mockHandler(method, url, data = {}, params = {}) {
   if (url === '/auth/login' && method === 'post') {
     const user = {
       id: 'usr-1',
-      name: data.email?.includes('admin') ? 'Administrator' : 'Aarav Sharma',
+      name: data.email?.includes('admin') ? 'Administrator' : 'Bhumika Kushwah',
       email: data.email,
       role: data.email?.includes('admin') ? 'admin' : 'user',
     };
@@ -309,7 +309,7 @@ async function mockHandler(method, url, data = {}, params = {}) {
   if (url === '/auth/register' && method === 'post') {
     const user = {
       id: 'usr-' + Date.now(),
-      name: data.name || 'Moviegoer',
+      name: data.name || 'Bhumika Kushwah',
       email: data.email,
       role: 'user',
     };
@@ -328,8 +328,8 @@ async function mockHandler(method, url, data = {}, params = {}) {
       data: {
         user: saved || {
           id: 'usr-1',
-          name: 'Aarav Sharma',
-          email: 'user@imovies.com',
+          name: 'Bhumika Kushwah',
+          email: 'bhumika@imovies.com',
           role: 'user',
         },
       },

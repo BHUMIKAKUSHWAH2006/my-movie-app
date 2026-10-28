@@ -59,7 +59,7 @@ export function Login() {
   const nav = useNavigate();
   const loading = useSelector((s) => s.auth.loading);
   const { user, to } = useAfterAuth();
-  const [form, setForm] = useState({ email: 'user@imovies.com', password: 'User@123' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
 
   if (user) return <Navigate to={to} replace />;
@@ -139,7 +139,7 @@ export function Login() {
             <button
               type="button"
               className="btn btn-subtle btn-sm"
-              onClick={() => setForm({ email: 'user@imovies.com', password: 'User@123' })}
+              onClick={() => setForm({ email: 'bhumika@imovies.com', password: 'User@123' })}
             >
               Demo User
             </button>
@@ -213,7 +213,7 @@ export function Register() {
           <input
             id="name"
             className="form-control"
-            placeholder="e.g. Aryan Khan"
+            placeholder="e.g. Bhumika Kushwah"
             autoComplete="name"
             {...f('name')}
           />
@@ -241,7 +241,7 @@ export function Register() {
             id="phone"
             type="tel"
             className="form-control"
-            placeholder="+91 98765 43210"
+            placeholder="e.g. 9876543210"
             autoComplete="tel"
             {...f('phone')}
           />
